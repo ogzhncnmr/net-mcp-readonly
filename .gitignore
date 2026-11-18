@@ -1,0 +1,14 @@
+# Binaries
+/net-mcp-readonly
+/net-mcp-readonly.exe
+/dist/
+
+# Local runtime files - never commit these
+*.jsonl
+known_hosts
+.env
+*.pem
+id_*
+
+# Go
+/coverage.out

@@ -1,0 +1,85 @@
+# net-mcp-readonly policy (version 1)
+#
+# Evaluation order for every command:
+#   1. character checks  - only printable ASCII; no line breaks, tabs, or
+#                          ; | & < > ` $ \ " ' # ! ? { } ( ) [ ] * ^ ~ %
+#   2. normalization     - whitespace collapsed; rules below match
+#                          case-insensitively, but the command is sent with
+#                          its original case (VRF/policy names)
+#   3. deny_tokens       - any word equal to a deny token  -> deny
+#   4. deny_regex        - full-match pattern               -> deny
+#   5. allow_prefixes    - word-by-word prefix match        -> allow
+#   6. allow_regex       - full-match pattern               -> allow
+#   7. anything else                                        -> deny
+#
+# Deny always wins. Abbreviations are not expanded: "sh ip route" is denied
+# because "sh" is not "show". Write commands in full.
+
+version: 1
+max_command_length: 256
+
+# Applied to every platform.
+deny_tokens:
+  - configure
+  - config
+  - conf
+  - system-view
+  - commit
+  - rollback
+  - delete
+  - remove
+  - reload
+  - reboot
+  - reset
+  - restart
+  - shutdown
+  - request
+  - clear
+  - debug
+  - undebug
+  - copy
+  - write
+  - save
+  - erase
+  - format
+  - load
+  - set
+  - edit
+  - run
+  - start
+  - tools
+  - admin
+  - file
+  - monitor
+  - do
+  - tech-support
+
+deny_regex: []
+
+platforms:
+  iosxr:
+    allow_prefixes:
+      - show
+  junos:
+    allow_prefixes:
+      - show
+  vrp:
+    allow_prefixes:
+      - display
+    deny_regex:
+      # Very large, CPU-heavy output on many VRP versions.
+      - "display diagnostic-information.*"
+  sros:
+    allow_prefixes:
+      - show
+
+# A tighter alternative: allow only what the agent needs, for example
+#
+#  iosxr:
+#    allow_prefixes:
+#      - show interfaces
+#      - show bgp
+#      - show isis
+#      - show mpls ldp
+#    allow_regex:
+#      - "show route ipv4 [0-9./]+"

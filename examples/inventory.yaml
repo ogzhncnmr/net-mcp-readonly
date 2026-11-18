@@ -1,0 +1,45 @@
+# net-mcp-readonly device inventory
+#
+# No secrets in this file. "credentials" points to where secrets live:
+#   env:PREFIX            reads PREFIX_USERNAME and PREFIX_PASSWORD
+#                         and/or PREFIX_KEY_FILE (+ PREFIX_KEY_PASSPHRASE)
+#   keyring:SERVICE/USER  password from the OS keyring
+#                         (Windows Credential Manager, macOS Keychain,
+#                          Secret Service on Linux)
+#
+# Addresses below are from 192.0.2.0/24 and 2001:db8::/32 (documentation
+# ranges). Replace them with your lab devices.
+
+# Required. OpenSSH known_hosts format; relative paths are resolved against
+# this file's directory. Populate it with ssh-keyscan and verify the
+# fingerprints out of band.
+known_hosts: known_hosts
+
+defaults:
+  port: 22
+  connect_timeout: 10s
+  command_timeout: 30s
+  max_output_bytes: 1048576
+
+devices:
+  - name: pe1-lab
+    host: 192.0.2.11
+    platform: iosxr
+    credentials: env:NETMCP_LAB
+
+  - name: pe2-lab
+    host: 192.0.2.12
+    platform: junos
+    credentials: env:NETMCP_LAB
+
+  - name: pe3-lab
+    host: 192.0.2.13
+    platform: vrp
+    credentials: keyring:net-mcp-readonly/netops-ro
+
+  - name: pe4-lab
+    host: 2001:db8::14
+    platform: sros
+    credentials: env:NETMCP_LAB
+    # Default is the classic-CLI command. For MD-CLI use:
+    # paging_command: environment more false

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "net-readonly": {
+      "command": "C:\\tools\\net-mcp-readonly.exe",
+      "args": [
+        "serve",
+        "-policy", "C:\\netmcp\\policy.yaml",
+        "-inventory", "C:\\netmcp\\inventory.yaml",
+        "-audit", "C:\\netmcp\\audit.jsonl"
+      ]
+    }
+  }
+}
